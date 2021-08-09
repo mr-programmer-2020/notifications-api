@@ -20,8 +20,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 
+Route::post('user',[UserController::class, 'create']);
+
 
 // Protected routes
 Route::group(['middleware' => ['auth:sanctum']], function () {
-    Route::post('add/user',[UserController::class, 'create']);
-});
+   // Route::post('add/user',[UserController::class, 'create']);
+}); 

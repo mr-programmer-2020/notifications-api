@@ -11,34 +11,37 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\UserRequest;
 use App\Http\Resources\UserResource;
+use App\Notifications\TelegramNotification;
 
 class UserController extends Controller
 {
     public function create(UserRequest $request)
     {
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'telegram_user_id' => $request->telegram_user_id,
-            'password' => bcrypt($request->password)
-        ]);
+        // $user = User::create([
+        //     'name' => $request->name,
+        //     'email' => $request->email,
+        //     'telegram_user_id' => $request->telegram_user_id,
+        //     'password' => bcrypt($request->password)
+        // ]);
 
         //send telegram notification
-        $job = (new TelegramJob())->delay(Carbon::now()->addSeconds(5));
-        dispatch($job);
+        //$job = (new TelegramJob())->delay(Carbon::now()->addSeconds(5));
+        //dispatch($job);
 
         //send mail notification
-        $job = (new MailJob())->delay(Carbon::now()->addSeconds(5));
-        dispatch($job);
+        //$job = (new MailJob())->delay(Carbon::now()->addSeconds(5));
+        //dispatch($job);
 
-        $token = $user->createToken('myapptoken')->plainTextToken;
+        User::first()->notify(new TelegramNotification());
 
-        $response = [
-            'user' => $user,
-            'token' => $token
-        ];
+       // $token = $user->createToken('myapptoken')->plainTextToken;
 
-        return new UserResource($response);
+        // $response = [
+        //     'user' => $user,
+        //     'token' => $token
+        // ];
+
+        // return new UserResource($response);
     }
 
     public function login(UserRequest $request) {

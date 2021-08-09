@@ -33,7 +33,7 @@ class TelegramJob implements ShouldQueue
      */
     public function handle()
     {
-        $user = User::get()->all();
+        $user = User::all();
         Notification::send($user, new TelegramNotification());
     }
 }
